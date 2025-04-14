@@ -3,8 +3,13 @@ import PDFProcessor from "./pdf_processor";
 
 const PDF = new PDFProcessor("WilsonCenter");
 
-async function main() {
-    let res = await fetch(`https://www.wilsoncenter.org/api/search/topics-regions/taxonomy/285?_page=1&keywords=&_tab=insight-analysis&_limit=100`);
+async function main(page: number) {
+    let res = await fetch(`https://www.wilsoncenter.org/api/search/topics-regions/taxonomy/285?
+        _page=${page}&
+        keywords=&
+        _tab=insight-analysis&
+        _limit=100
+    `);
 
     let body = await res.json();
 
@@ -19,14 +24,15 @@ async function main() {
             link = `https://www.wilsoncenter.org${link}`;
         }
 
-        console.log(link)
-
         let articleRes = await fetch(link);
         let articleBody = await articleRes.text();
         await PDF.print(articleBody, link);
     }
 
+    await PDF.merge();
     PDF.close();
 }
 
-main()
+for (var page = 0; page < 4; page++) {
+    main(page);
+}

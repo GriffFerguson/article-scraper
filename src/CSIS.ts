@@ -29,6 +29,7 @@ async function main(page: number) {
         await PDF.print(articleBody, link);
     }
 
+    await PDF.merge();
     PDF.close()
 }
 for (var page = 0; page < 4; page++) {
