@@ -12,6 +12,7 @@ export default class PDFProcessor {
     private STYLES: string;
     private browser!: Browser;
     private BlankPDF!: PDFPage;
+    private encoder: TextEncoder;
     
     constructor(
         outputDir: string
@@ -32,6 +33,8 @@ export default class PDFProcessor {
             PDFDocument.create().then(doc => {
             this.BlankPDF = doc.getPage(0);
         });
+
+        this.encoder = new TextEncoder();
     }
 
     async print(dom: Document | string, link: string) {
@@ -66,10 +69,16 @@ export default class PDFProcessor {
                 ${readable?.content}
             </body></html>`
 
+        readable!.content = readable!.content.replace(/’/gm, "'");
+        readable!.content = readable!.content.replace(/—/gm, "--");
+        readable!.content = readable!.content.replace(/”/gm, '"');
+        readable!.content = readable!.content.replace(/“/gm, '"');
+
         // render article
-        let base64 = Buffer.from(readable!.content).toString("base64");
+        let base64 = Buffer.from(readable!.content, "utf-8").toString("base64");
         let dataURI = `data:text/html;base64,${base64}`;
-        // console.log(dataURI);
+        // let dataURI = `data:text/html;${encodeURIComponent(readable!.content)}`;
+        console.log(dataURI);
 
         try {
             await page.goto(dataURI)
