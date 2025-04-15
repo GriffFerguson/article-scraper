@@ -1,3 +1,4 @@
+// engine for "Center for Strategic and International Studies"
 import PDFProcessor from "./pdf_processor";
 import { JSDOM } from "jsdom";
 
@@ -16,7 +17,7 @@ async function main(page: number) {
 
     let results = await res.json();
 
-    let {document} = new JSDOM(results[3].data).window
+    let {document} = new JSDOM(results[3].data).window;
 
     let articles = document.getElementsByTagName("article")
 

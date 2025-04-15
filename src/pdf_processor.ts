@@ -4,13 +4,14 @@ import { join } from "path";
 import puppeteer, { Browser } from "puppeteer";
 import { JSDOM } from "jsdom";
 import { PDFDocument, PDFPage } from "pdf-lib";
+// import ollama from "ollama";
 
 export default class PDFProcessor {
     private SOURCE: string;
     private OUTPUT_DIR: string;
     private STYLES: string;
     private browser!: Browser;
-    private BlankPDF!: PDFPage
+    private BlankPDF!: PDFPage;
     
     constructor(
         outputDir: string
@@ -22,11 +23,13 @@ export default class PDFProcessor {
         }
 
         this.STYLES = readFileSync(join(__dirname, "../assets/pdf_style.css"), {encoding: "utf8"});
+        
         puppeteer.launch()
             .then(browser => {
                 this.browser = browser;
             })
-        PDFDocument.create().then(doc => {
+        
+            PDFDocument.create().then(doc => {
             this.BlankPDF = doc.getPage(0);
         });
     }
@@ -40,15 +43,33 @@ export default class PDFProcessor {
 
         let readable = new Readability(dom).parse();
 
+        console.log(readable);
+
         // add links to the bottom
-        readable!.content += `<br/><br/><p><b>This article was originally published at <a href="${link}">${link}</a></b></p>`;
+        readable!.content = `${readable?.content}<br/><br/><p><b>This article was originally published at <a href="${link}">${link}</a></b></p>`;
         readable!.textContent += `\n\nThis article was originally published at ${link}`;
 
+        let topic = "";
+        let topics = [
+
+        ]
+
         // ensure title is displayed and add styles
-        readable!.content = `<!DOCTYPE html><html><head><title>${readable?.title}</title><style>${this.STYLES}</style></head><body>${readable?.content}</body></html>`
+        readable!.content = `
+            <!DOCTYPE html>
+            <html><head>
+                <title>${readable?.title}</title>
+                <style>${this.STYLES}</style>
+            </head><body>
+                <h1>${readable?.title}</h1>
+                ${topic ? `<p><b>Suggested categorization: ${topic}</b></p>` : ""}
+                ${readable?.content}
+            </body></html>`
 
         // render article
-        let dataURI = `data:text/html;base64,${Buffer.from(readable!.content).toString("base64")}`;
+        let base64 = Buffer.from(readable!.content).toString("base64");
+        let dataURI = `data:text/html;base64,${base64}`;
+        // console.log(dataURI);
 
         try {
             await page.goto(dataURI)

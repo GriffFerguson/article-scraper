@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx tsc",
     "run:WilsonCenter": "pnpm build && node dist/WilsonCenter.js",
-    "run:CSIS": "pnpm build && node dist/CSIS.js"
+    "run:CSIS": "pnpm build && node dist/CSIS.js",
+    "run:CFR": "pnpm build && node dist/CFR.js"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
   "dependencies": {
     "@mozilla/readability": "^0.6.0",
     "jsdom": "^26.0.0",
+    "ollama": "^0.5.14",
     "pdf-lib": "^1.17.1",
     "puppeteer": "^24.4.0"
   }
