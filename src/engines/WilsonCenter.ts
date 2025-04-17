@@ -1,6 +1,7 @@
 // engine for "Wilson Center"
 import { JSDOM } from "jsdom";
 import PDFProcessor from "../pdf_processor";
+import { sleep } from "../utils";
 
 const PDF = new PDFProcessor("WilsonCenter");
 
@@ -28,12 +29,12 @@ async function main(page: number) {
         let articleRes = await fetch(link);
         let articleBody = await articleRes.text();
         await PDF.print(articleBody, link);
+        await sleep(3500);
     }
 
-    await PDF.merge();
     PDF.close();
 }
 
-for (var page = 0; page < 4; page++) {
+for (var page = 0; page < 5; page++) {
     main(page);
 }

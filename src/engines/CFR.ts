@@ -1,6 +1,7 @@
 // engine for "Council on Foreign Relations" in particular the "In-Briefs" category
 import PDFProcessor from "../pdf_processor";
 import {JSDOM} from "jsdom";
+import { sleep } from "../utils";
 
 const PDF = new PDFProcessor("CFR_InBriefs");
 
@@ -28,10 +29,12 @@ async function main(page: number) {
 
     for (var article of articles) {
         let link = article.getElementsByTagName("a")[1].getAttribute("href")!;
+        link = `https://www.cfr.org${link}`;
 
-        let articleRes = await fetch(`https://www.cfr.org${link}`);
+        let articleRes = await fetch(link);
         let articleBody = await articleRes.text();
         await PDF.print(articleBody, link);
+        await sleep(5000);
     }
 }
 

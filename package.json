@@ -8,7 +8,8 @@
     "run:WilsonCenter": "pnpm build && node dist/engines/WilsonCenter.js",
     "run:CSIS": "pnpm build && node dist/engines/CSIS.js",
     "run:CFR": "pnpm build && node dist/engines/CFR.js",
-    "run:Chron": "pnpm build && node dist/engines/Chron.js"
+    "run:Chron": "pnpm build && node dist/engines/Chron.js",
+    "run:Brookings": "pnpm build && node dist/engines/Brookings.js"
   },
   "keywords": [],
   "author": "",

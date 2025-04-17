@@ -1,10 +1,11 @@
 // engine for "Center for Strategic and International Studies"
 import PDFProcessor from "../pdf_processor";
 import { JSDOM } from "jsdom";
+import { sleep } from "../utils";
 
 const PDF = new PDFProcessor("CSIS");
 
-async function main(page: number) {
+async function processPage(page: number) {
     let res = await fetch(`https://www.csis.org/views/ajax?
         f[0]=content_type:report&
         f[1]=report_type:3034&
@@ -28,11 +29,18 @@ async function main(page: number) {
         let articleRes = await fetch(link);
         let articleBody = await articleRes.text();
         await PDF.print(articleBody, link);
+        await sleep(3500);
     }
 
-    await PDF.merge();
-    PDF.close()
+    // PDF.close()
+
+    return;
 }
-for (var page = 0; page < 4; page++) {
-    main(page);
+
+async function main() {
+    let maxPage = 10;
+    for (var page = 0; page < maxPage; page++) {
+        let processor = processPage(page);
+    }
 }
+main();

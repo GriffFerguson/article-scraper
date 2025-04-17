@@ -4,7 +4,6 @@ import { join } from "path";
 import puppeteer, { Browser } from "puppeteer";
 import { JSDOM } from "jsdom";
 import { PDFDocument, PDFPage } from "pdf-lib";
-import ollama from "ollama";
 
 export default class PDFProcessor {
     private SOURCE: string;
@@ -42,9 +41,10 @@ export default class PDFProcessor {
         }
 
         let readable = new Readability(dom).parse();
-
-        console.log(readable);
-
+        if (Object.keys(readable || {}).indexOf("content") == -1 ){
+            console.error("WARNING! Unable to parse readable content from " + link);
+            return;
+        }
         // add links to the bottom
         readable!.content = `${readable?.content}<br/><br/><p><b>This article was originally published at <a href="${link}">${link}</a></b></p>`;
         readable!.textContent += `\n\nThis article was originally published at ${link}`;
@@ -78,15 +78,13 @@ export default class PDFProcessor {
         // render article
         let base64 = Buffer.from(readable!.content, "utf-8").toString("base64");
         let dataURI = `data:text/html;base64,${base64}`;
-        // let dataURI = `data:text/html;${encodeURIComponent(readable!.content)}`;
-        console.log(dataURI);
 
         try {
             await page.goto(dataURI)
             await page.pdf({
                 path: join(this.OUTPUT_DIR, readable!.title + ".pdf")
             })
-            page.close();
+            await page.close();
         } catch(e) {
             console.error(e);
         }
@@ -125,7 +123,7 @@ export default class PDFProcessor {
         console.log("done merging");
     }
 
-    close() {
-        return this.browser.close();
+    async close() {
+        return await this.browser.close();
     }
 }
