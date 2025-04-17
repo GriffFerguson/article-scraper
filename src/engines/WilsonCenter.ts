@@ -1,6 +1,6 @@
 // engine for "Wilson Center"
 import { JSDOM } from "jsdom";
-import PDFProcessor from "./pdf_processor";
+import PDFProcessor from "../pdf_processor";
 
 const PDF = new PDFProcessor("WilsonCenter");
 

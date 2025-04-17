@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "run:WilsonCenter": "pnpm build && node dist/WilsonCenter.js",
-    "run:CSIS": "pnpm build && node dist/CSIS.js",
-    "run:CFR": "pnpm build && node dist/CFR.js"
+    "run:WilsonCenter": "pnpm build && node dist/engines/WilsonCenter.js",
+    "run:CSIS": "pnpm build && node dist/engines/CSIS.js",
+    "run:CFR": "pnpm build && node dist/engines/CFR.js",
+    "run:Chron": "pnpm build && node dist/engines/Chron.js"
   },
   "keywords": [],
   "author": "",

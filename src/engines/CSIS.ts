@@ -1,5 +1,5 @@
 // engine for "Center for Strategic and International Studies"
-import PDFProcessor from "./pdf_processor";
+import PDFProcessor from "../pdf_processor";
 import { JSDOM } from "jsdom";
 
 const PDF = new PDFProcessor("CSIS");

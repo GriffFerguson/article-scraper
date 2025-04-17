@@ -1,5 +1,5 @@
 // engine for "Council on Foreign Relations" in particular the "In-Briefs" category
-import PDFProcessor from "./pdf_processor";
+import PDFProcessor from "../pdf_processor";
 import {JSDOM} from "jsdom";
 
 const PDF = new PDFProcessor("CFR_InBriefs");

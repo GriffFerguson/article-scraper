@@ -4,7 +4,7 @@ import { join } from "path";
 import puppeteer, { Browser } from "puppeteer";
 import { JSDOM } from "jsdom";
 import { PDFDocument, PDFPage } from "pdf-lib";
-// import ollama from "ollama";
+import ollama from "ollama";
 
 export default class PDFProcessor {
     private SOURCE: string;
@@ -12,7 +12,6 @@ export default class PDFProcessor {
     private STYLES: string;
     private browser!: Browser;
     private BlankPDF!: PDFPage;
-    private encoder: TextEncoder;
     
     constructor(
         outputDir: string
@@ -33,11 +32,9 @@ export default class PDFProcessor {
             PDFDocument.create().then(doc => {
             this.BlankPDF = doc.getPage(0);
         });
-
-        this.encoder = new TextEncoder();
     }
 
-    async print(dom: Document | string, link: string) {
+    async print(dom: Document | string, link: string | null) {
         let page = await this.browser.newPage();
         console.log("Processing document with link " + link);
         if (typeof dom === "string") {
@@ -52,11 +49,15 @@ export default class PDFProcessor {
         readable!.content = `${readable?.content}<br/><br/><p><b>This article was originally published at <a href="${link}">${link}</a></b></p>`;
         readable!.textContent += `\n\nThis article was originally published at ${link}`;
 
-        let topic = "";
         let topics = [
-
+            "Things Trump Did",
+            "Tariffs",
+            "Economics",
+            "Healthcare",
+            "Immigration"
         ]
-
+        let topic = "";
+        
         // ensure title is displayed and add styles
         readable!.content = `
             <!DOCTYPE html>

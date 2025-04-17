@@ -10,4 +10,5 @@ Economist
 Atlantic
 Brookings Institute
 (DONE) Center on Strategic and International Studies
-Council on Foreign Relations
+(Debug) Council on Foreign Relations
+Reuters
